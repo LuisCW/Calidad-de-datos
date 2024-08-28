@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Aplicación de Análisis de Reglas de Calidad de Datos</title>
+    <meta charset="UTF-8" />
+
+    <style>
+      /* Estilos CSS aquí */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      #dataForm {
+        margin-bottom: 20px;
+      }
+
+      #dataForm label {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      #dataForm input[type="file"] {
+        display: block;
+        margin-top: 10px;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+      }
+
+      #dataForm button[type="submit"] {
+        display: block;
+        margin-top: 10px;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+      }
+
+      #results {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      #results th,
+      #results td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      #results th {
+        background-color: #4CAF50;
+        color: #fff;
+      }
+
+      #results tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      #results tr:hover {
+        background-color: #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Aplicación de Análisis de Reglas de Calidad de Datos</h1>
+
+    <form id="dataForm">
+      <label for="fileInput">Seleccionar archivo:</label>
+      <input type="file" id="fileInput" />
+      <button type="submit">Procesar archivo</button>
+    </form>
+
+    <table id="results">
+      <thead>
+        <tr>
+          <th>Identificación</th>
+          <th>Nombres</th>
+          <th>Apellidos</th>
+          <th>Celular</th>
+          <th>Correo</th>
+        </tr>
+      </thead>
+      <tbody id="resultsBody"></tbody>
+    </table>
+
+    <script src="app.js"></script>
+    <script>
+      document.getElementById("dataForm").addEventListener("submit", function (event) {
+        event.preventDefault(); // Evita que el formulario se envíe
+
+        // Obtiene el archivo seleccionado
+        const fileInput = document.getElementById("fileInput");
+        const file = fileInput.files[0];
+
+        // Crea una instancia de FileReader
+        const reader = new FileReader();
+
+        // Maneja la finalización de la lectura del archivo
+        reader.onload = function (event) {
+          const fileContent = event.target.result;
+          // Procesa el contenido del archivo y aplica las reglas de calidad de datos
+          processFileContent(fileContent);
+        };
+
+        // Lee el archivo como texto
+        reader.readAsText(file);
+      });
+
+      function processFileContent(fileContent) {
+        // Dividir el contenido del archivo en registros
+        const records = fileContent.split("\n");
+
+        // Crear una instancia de la clase Application
+        const app = new Application();
+
+        // Crear un array para almacenar los resultados de cada registro
+        const results = [];
+
+        // Procesar cada registro y aplicar las reglas de calidad de datos
+        for (const record of records) {
+          app.applyQualityRules(record);
+          // Almacenar los resultados de cada registro en el array
+          results.push({
+            result1: app.result1,
+            result2: app.result2,
+            result3: app.result3,
+            result4: app.result4,
+            result5: app.result5,
+          });
+        }
+
+        // Mostrar los resultados en la tabla
+        const resultsBody = document.getElementById("resultsBody");
+        resultsBody.innerHTML = "";
+
+        // Recorrer el array de resultados y mostrar cada resultado en una fila de la tabla
+        for (const result of results) {
+          const row = document.createElement("tr");
+
+          const idCell = document.createElement("td");
+          idCell.textContent = result.result1;
+          row.appendChild(idCell);
+
+          const nameCell = document.createElement("td");
+          nameCell.textContent = result.result2;
+          row.appendChild(nameCell);
+
+          const lastNameCell = document.createElement("td");
+          lastNameCell.textContent = result.result3;
+          row.appendChild(lastNameCell);
+
+          const phoneCell = document.createElement("td");
+          phoneCell.textContent = result.result4;
+          row.appendChild(phoneCell);
+
+          const emailCell = document.createElement("td");
+          emailCell.textContent = result.result5;
+          row.appendChild(emailCell);
+
+          resultsBody.appendChild(row);
+        }
+      }
+    </script>
+  </body>
+</html>
+
